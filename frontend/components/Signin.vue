@@ -22,9 +22,9 @@
         </button>
 
         <div class="my-4">
-          <nuxt-link to="/signup" class="link-grey">
+          <router-link to="/signup" class="link-grey">
             Sign up
-          </nuxt-link>
+          </router-link>
         </div>
       </form>
     </div>
@@ -48,26 +48,24 @@ export default {
   },
   methods: {
     signin () {
-      console.log(this.$plain)
       this.$plain.post('/signin', { email: this.email, password: this.password })
         .then(response => this.signinSuccessful(response))
         .catch(error => this.signinFailed(error))
     },
     signinSuccessful (response) {
-      console.log(response)
       if (!response.data.csrf) {
         this.signinFailed(response)
         return
       }
-      localStorage.setItem('csrf', response.data.csrf)
-      localStorage.setItem('signedIn', true)
+      localStorage.csrf = response.data.csrf
+      localStorage.signedIn = true
       this.error = ''
       this.$router.replace('/records')
     },
     signinFailed (error) {
       this.error = (error.response && error.response.data && error.response.data.error) || ''
-      localStorage.removeItem('signedIn')
-      localStorage.removeItem('csrf')
+      delete localStorage.csrf
+      delete localStorage.signedIn
     },
     checkSignedIn () {
       if (localStorage.signedIn) {
