@@ -1,40 +1,15 @@
-<template>
-  <div class="max-w-sm m-auto my-8">
-    <div class="border p-10 border-grey-light shadow rounded">
-      <h3 class="text-2xl mb-6 text-grey-darkest">
-        Sign Up
-      </h3>
-      <form @submit.prevent="signup">
-        <div v-if="error" class="text-red">
-          {{ error }}
-        </div>
+<template lang="pug">
 
-        <div class="mb-6">
-          <label for="email" class="label">E-mail Address</label>
-          <input id="email" v-model="email" type="email" class="input" placeholder="andy@web-crunch.com">
-        </div>
-
-        <div class="mb-6">
-          <label for="password" class="label">Password</label>
-          <input id="password" v-model="password" type="password" class="input" placeholder="Password">
-        </div>
-
-        <div class="mb-6">
-          <label for="password_confirmation" class="label">Password Confirmation</label>
-          <input id="password_confirmation" v-model="password_confirmation" type="password" class="input" placeholder="Password Confirmation">
-        </div>
-        <button type="submit" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center">
-          Sign Up
-        </button>
-
-        <div class="my-4">
-          <nuxt-link to="/" class="link-grey">
-            Sign In
-          </nuxt-link>
-        </div>
-      </form>
-    </div>
-  </div>
+div
+  h3 Sign Up
+  v-form(@submit.prevent='signup')
+    v-alert(v-if='error') {{ error }}
+    v-text-field(v-model="email" label="E-mail adress")
+    v-text-field(v-model="password" label="Password" type="password")
+    v-text-field(v-model="password_confirmation" label="Password confirmation" type="password")
+    v-btn(type='submit') Sign Up
+    .my-4
+      nuxt-link(to='/') Sign In
 </template>
 
 <script>
