@@ -20,7 +20,6 @@ export default {
   components: { Logo },
   computed: {
     signedIn () {
-      console.log(localStorage.getItem('signedIn'))
       return localStorage.getItem('signedIn')
     }
   },
