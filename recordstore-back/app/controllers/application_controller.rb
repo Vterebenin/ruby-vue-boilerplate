@@ -9,6 +9,8 @@ class ApplicationController < ActionController::API
     end
 
     def not_authorized
+      print '123qwe'
+      print params
       render json: { error: 'Not authorized' }, status: :unauthorized
     end
 end
