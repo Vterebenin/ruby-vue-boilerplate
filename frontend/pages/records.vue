@@ -1,119 +1,42 @@
-<template>
-  <div class="max-w-md m-auto py-10">
-    <div v-if="error" class="text-red">
-      {{ error }}
-    </div>
-    <h3 class="font-mono font-regular text-3xl mb-4">
-      Add a new record
-    </h3>
-    <form action="" @submit.prevent="addRecord">
-      <div class="mb-6">
-        <label for="record_title" class="label">Title</label>
-        <input
-          id="record_title"
-          v-model="newRecord.title"
-          class="input"
-          autofocus
-          autocomplete="off"
-          placeholder="Type a record name"
-        >
-      </div>
-
-      <div class="mb-6">
-        <label for="record_year" class="label">Year</label>
-        <input
-          id="record_year"
-          v-model="newRecord.year"
-          class="input"
-          autofocus
-          autocomplete="off"
-          placeholder="Year"
-        >
-      </div>
-
-      <div class="mb-6">
-        <label for="artist" class="label">Artist</label>
-        <select id="artist" v-model="newRecord.artist" class="select">
-          <option disabled value="">
-            Select an artist
-          </option>
-          <option v-for="artist in artists" :key="artist.id" :value="artist.id">
-            {{ artist.name }}
-          </option>
-        </select>
-        <p class="pt-4">
-          Don't see an artist? <router-link class="text-grey-darker underline" to="/artists">
-            Create one
-          </router-link>
-        </p>
-      </div>
-
-      <input type="submit" value="Add Record" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center">
-    </form>
-
-    <hr class="border border-grey-light my-6">
-
-    <ul class="list-reset mt-4">
-      <li v-for="record in records" :key="record.id" class="py-4" :record="record">
-        <div class="flex items-center justify-between flex-wrap">
-          <div class="flex-1 flex justify-between flex-wrap pr-4">
-            <p class="block font-mono font-semibold flex items-center">
-              <svg class="fill-current text-indigo w-6 h-6 mr-2" viewBox="0 0 24 24" width="24" height="24"><title>record vinyl</title><path d="M23.938 10.773a11.915 11.915 0 0 0-2.333-5.944 12.118 12.118 0 0 0-1.12-1.314A11.962 11.962 0 0 0 12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12c0-.414-.021-.823-.062-1.227zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-5a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" /></svg>
-              {{ record.title }} &mdash; {{ record.year }}
-            </p>
-            <p class="block font-mono font-semibold">
-              {{ getArtist(record) }}
-            </p>
-          </div>
-          <button
-            class="bg-transparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 mr-2 rounded"
-            @click.prevent="editRecord(record)"
-          >
-            Edit
-          </button>
-
-          <button
-            class="bg-transparent text-sm hover:bg-red text-red hover:text-white no-underline font-bold py-2 px-4 rounded border border-red"
-            @click.prevent="removeRecord(record)"
-          >
-            Delete
-          </button>
-        </div>
-
-        <div v-if="record == editedRecord">
-          <form action="" @submit.prevent="updateRecord(record)">
-            <div class="mb-6 p-4 bg-white rounded border border-grey-light mt-4">
-              <div class="mb-6">
-                <label class="label">Title</label>
-                <input v-model="record.title" class="input">
-              </div>
-
-              <div class="mb-6">
-                <label class="label">Year</label>
-                <input v-model="record.year" class="input">
-              </div>
-
-              <div class="mb-6">
-                <label class="label">Artist</label>
-                <select id="artist" v-model="record.artist" class="select">
-                  <option v-for="artist in artists" :key="artist.id" :value="artist.id">
-                    {{ artist.name }}
-                  </option>
-                </select>
-              </div>
-
-              <input type="submit" value="Update" class="bg-transparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 mr-2 rounded">
-            </div>
-          </form>
-        </div>
-      </li>
-    </ul>
-  </div>
+<template lang="pug">
+div
+  v-alert(v-if='error')
+    | {{ error }}
+  h3.font-mono.font-regular.text-3xl.mb-4
+    | Add a new record
+  v-form(@submit.prevent='addRecord')
+    v-text-field(v-model="newRecord.title" label="Title")
+    v-text-field(v-model="newRecord.year" label="Year")
+    v-select(v-model="newRecord.artist" label="Select an artist" item-value="id" item-text="name" :items="artists")
+    p.pb-4 Don&apos;t see an artist?
+      nuxt-link(to='/artists') Create one
+    v-btn.mb-5(type="submit" color="black" dark) Add Record
+  v-divider
+  v-list
+    template(v-for="record in records")
+      v-list-item
+        v-list-item-avatar
+          logo
+        v-list-item-content
+          v-list-item-title {{ record.title }} &mdash; {{ record.year }}
+          v-list-item-subtitle {{ getArtist(record) }}
+        v-list-item-action
+          v-btn(@click.prevent="editRecord(record)" text) Edit
+          v-btn(@click.prevent="removeRecord(record)" text) Delete
+      template(v-if='record == editedRecord')
+        v-form(@submit.prevent='updateRecord(record)')
+          v-text-field(v-model="record.title" label="Title")
+          v-text-field(v-model="record.year" label="Year")
+          v-select(v-model="record.artist_id" label="Select an artist" item-value="id" item-text="name" :items="artists")
+          v-btn(type="submit" text) Update
 </template>
 
 <script>
+import Logo from '~/components/Logo'
+
 export default {
   name: 'Records',
+  components: { Logo },
   data () {
     return {
       artists: [],
@@ -141,14 +64,9 @@ export default {
       this.error = (error.response && error.response.data && error.response.data.error) || text
     },
     getArtist (record) {
-      const recordArtistValues = this.artists.filter(artist => artist.id === record.artist_id)
-      let artist
+      const artist = this.artists.find(artist => artist.id === record.artist_id)
 
-      recordArtistValues.forEach(function (element) {
-        artist = element.name
-      })
-
-      return artist
+      return (artist && artist.name) || ''
     },
     addRecord () {
       const value = this.newRecord
