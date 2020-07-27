@@ -11,14 +11,14 @@ div
     template(v-for="artist in artists")
       v-list-item
         v-list-item-avatar
-          svg.fill-current.text-indigo.w-6.h-6.mr-2(viewbox='0 0 20 20' width='20' height='20')
+          svg(viewbox='0 0 20 20' width='20' height='20')
             title music artist
             path(d='M15.75 8l-3.74-3.75a3.99 3.99 0 0 1 6.82-3.08A4 4 0 0 1 15.75 8zm-13.9 7.3l9.2-9.19 2.83 2.83-9.2 9.2-2.82-2.84zm-1.4 2.83l2.11-2.12 1.42 1.42-2.12 2.12-1.42-1.42zM10 15l2-2v7h-2v-5z')
         v-list-item-content
           v-list-item-title {{ artist.name }}
-        v-list-item-actions
-          v-btn(@click.prevent="editArtist(artist)") Edit
-          v-btn(@click.prevent="removeArtist(artist)") Delete
+        v-list-item-action
+          v-btn(@click.prevent="editArtist(artist)" text) Edit
+          v-btn(@click.prevent="removeArtist(artist)" text) Delete
       template(v-if='artist == editedArtist')
         v-form(@submit.prevent='updateArtist(artist)')
           .mb-6

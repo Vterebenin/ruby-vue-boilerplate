@@ -1,8 +1,9 @@
 <template lang="pug">
   v-app-bar(app color="white")
-    v-app-bar-nav-icon
-      logo
-    v-toolbar-title(to="/") RecordStore
+    v-toolbar-title
+      v-btn(to="/" text height="64" tile)
+        logo.mr-2
+        | RecordStore
     v-spacer
     v-toolbar-items
       v-btn(text v-if="!signedIn" to="/") Sign in
