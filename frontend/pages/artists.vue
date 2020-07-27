@@ -1,60 +1,29 @@
-<template>
-  <div class="max-w-md m-auto py-10">
-    <div v-if="error" class="text-red">
-      {{ error }}
-    </div>
-    <h3 class="font-mono font-regular text-3xl mb-4">
-      Add a new artist
-    </h3>
-    <form action="" @submit.prevent="addArtist">
-      <div class="mb-6">
-        <input
-          v-model="newArtist.name"
-          class="input"
-          autofocus
-          autocomplete="off"
-          placeholder="Type an arist name"
-        >
-      </div>
-      <input type="submit" value="Add Artist" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center">
-    </form>
-
-    <hr class="border border-grey-light my-6">
-
-    <ul class="list-reset mt-4">
-      <li v-for="artist in artists" :key="artist.id" class="py-4" :artist="artist">
-        <div class="flex items-center justify-between flex-wrap">
-          <p class="block flex-1 font-mono font-semibold flex items-center ">
-            <svg class="fill-current text-indigo w-6 h-6 mr-2" viewBox="0 0 20 20" width="20" height="20"><title>music artist</title><path d="M15.75 8l-3.74-3.75a3.99 3.99 0 0 1 6.82-3.08A4 4 0 0 1 15.75 8zm-13.9 7.3l9.2-9.19 2.83 2.83-9.2 9.2-2.82-2.84zm-1.4 2.83l2.11-2.12 1.42 1.42-2.12 2.12-1.42-1.42zM10 15l2-2v7h-2v-5z" /></svg>
-            {{ artist.name }}
-          </p>
-
-          <button
-            class="bg-tranparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 mr-2 rounded"
-            @click.prevent="editArtist(artist)"
-          >
-            Edit
-          </button>
-
-          <button
-            class="bg-transprent text-sm hover:bg-red text-red hover:text-white no-underline font-bold py-2 px-4 rounded border border-red"
-            @click.prevent="removeArtist(artist)"
-          >
-            Delete
-          </button>
-        </div>
-
-        <div v-if="artist == editedArtist">
-          <form action="" @submit.prevent="updateArtist(artist)">
-            <div class="mb-6 p-4 bg-white rounded border border-grey-light mt-4">
-              <input v-model="artist.name" class="input">
-              <input type="submit" value="Update" class=" my-2 bg-transparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 rounded cursor-pointer">
-            </div>
-          </form>
-        </div>
-      </li>
-    </ul>
-  </div>
+<template lang="pug">
+div
+  v-alert(v-if='error') {{ error }}
+  h3 Add a new artist
+  v-form(@submit.prevent='addArtist')
+    .mb-6
+      v-text-field(v-model="newArtist.name" label="Type an artist name")
+      v-btn(type="submit" text)  Add artist
+  v-divider
+  v-list
+    template(v-for="artist in artists")
+      v-list-item
+        v-list-item-avatar
+          svg.fill-current.text-indigo.w-6.h-6.mr-2(viewbox='0 0 20 20' width='20' height='20')
+            title music artist
+            path(d='M15.75 8l-3.74-3.75a3.99 3.99 0 0 1 6.82-3.08A4 4 0 0 1 15.75 8zm-13.9 7.3l9.2-9.19 2.83 2.83-9.2 9.2-2.82-2.84zm-1.4 2.83l2.11-2.12 1.42 1.42-2.12 2.12-1.42-1.42zM10 15l2-2v7h-2v-5z')
+        v-list-item-content
+          v-list-item-title {{ artist.name }}
+        v-list-item-actions
+          v-btn(@click.prevent="editArtist(artist)") Edit
+          v-btn(@click.prevent="removeArtist(artist)") Delete
+      template(v-if='artist == editedArtist')
+        v-form(@submit.prevent='updateArtist(artist)')
+          .mb-6
+            v-text-field(v-model="artist.name" label="Artist name")
+            v-btn(type="submit" text)  Update
 </template>
 
 <script>
@@ -106,7 +75,7 @@ export default {
     },
     updateArtist (artist) {
       this.editedArtist = ''
-      this.$secured.patch(`/api/v1/artists/${artist.id}`, { artist: { title: artist.name } })
+      this.$secured.patch(`/api/v1/artists/${artist.id}`, { artist: { name: artist.name } })
         .catch(error => this.setError(error, 'Cannot update artist'))
     }
   }
